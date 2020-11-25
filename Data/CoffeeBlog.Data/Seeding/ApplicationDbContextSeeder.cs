@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
+    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
 
@@ -22,10 +23,13 @@
             }
 
             var logger = serviceProvider.GetService<ILoggerFactory>().CreateLogger(typeof(ApplicationDbContextSeeder));
+            var configuration = serviceProvider.GetService<IConfiguration>();
 
             var seeders = new List<ISeeder>
                           {
                               new RolesSeeder(),
+                              new UsersSeeder(configuration),
+                              new UserRoleSeeder(configuration),
                               new SettingsSeeder(),
                           };
 
