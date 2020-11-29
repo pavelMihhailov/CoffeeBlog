@@ -1,9 +1,54 @@
 ﻿@using CoffeeBlog.Common
+
 @{
     this.ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome to @GlobalConstants.SystemName!</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+@await Html.PartialAsync("/Views/Shared/Partials/_BannerPartial.cshtml", new BannerViewModel
+    {
+        ImagePath = "/img/home-bg.jpg",
+        Heading = "Добре дошли!",
+        SubHeading = "Вижте едни от последните ни постове",
+    })
+
+<div class="container">
+    <div class="row">
+
+        @await Html.PartialAsync("/Views/Shared/Partials/_PostCardPartial.cshtml", new PostCardViewModel
+            {
+                ImagePath = "https://mdbootstrap.com/img/new/standard/nature/111.jpg",
+                Title = "Card title",
+                SubTitle = "Some quick example text to build on the card title and make up the bulk of the card\'s content.",
+                PostLink = "/Posts/1",
+                ButtonText = "Read Post",
+            })
+
+        @await Html.PartialAsync("/Views/Shared/Partials/_PostCardPartial.cshtml", new PostCardViewModel
+            {
+                ImagePath = "https://mdbootstrap.com/img/new/standard/nature/111.jpg",
+                Title = "Card title",
+                SubTitle = "Some quick example text to build on the card title and make up the bulk of the card\'s content.",
+                PostLink = "/Posts/1",
+                ButtonText = "Read Post",
+            })
+
+        @await Html.PartialAsync("/Views/Shared/Partials/_PostCardPartial.cshtml", new PostCardViewModel
+            {
+                ImagePath = "https://mdbootstrap.com/img/new/standard/nature/111.jpg",
+                Title = "Card title",
+                SubTitle = "Some quick example text to build on the card title and make up the bulk of the card\'s content.",
+                PostLink = "/Posts/1",
+                ButtonText = "Read Post",
+            })
+
+        @await Html.PartialAsync("/Views/Shared/Partials/_PostCardPartial.cshtml", new PostCardViewModel
+            {
+                ImagePath = "https://mdbootstrap.com/img/new/standard/nature/111.jpg",
+                Title = "Card title",
+                SubTitle = "Some quick example text to build on the card title and make up the bulk of the card\'s content.",
+                PostLink = "/Posts/1",
+                ButtonText = "Read Post",
+            })
+
+    </div>
 </div>
