@@ -24,6 +24,12 @@
         {
         }
 
+        public DbSet<Post> Posts { get; set; }
+
+        public DbSet<Tag> Tags { get; set; }
+
+        public DbSet<PostTag> PostTags { get; set; }
+
         public DbSet<Setting> Settings { get; set; }
 
         public override int SaveChanges() => this.SaveChanges(true);
