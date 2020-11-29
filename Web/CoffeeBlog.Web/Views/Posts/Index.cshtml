@@ -1,14 +1,13 @@
-﻿@using CoffeeBlog.Common
-@model IQueryable<Post>
+﻿@model IQueryable<Post>
 @{
-    this.ViewData["Title"] = "Начало";
+    this.ViewData["Title"] = "Всички Постове";
 }
 
 @await Html.PartialAsync("/Views/Shared/Partials/_BannerPartial.cshtml", new BannerViewModel
     {
         ImagePath = "/img/home-bg.jpg",
-        Heading = "Добре дошли!",
-        SubHeading = "Вижте едни от последните ни постове",
+        Heading = "Всички постове",
+        SubHeading = "Вижте всички постове",
     })
 
 <div class="container">

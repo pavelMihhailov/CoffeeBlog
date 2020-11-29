@@ -1,0 +1,21 @@
+﻿@model Post
+@{
+    this.ViewData["Title"] = Model.Title;
+}
+
+@await Html.PartialAsync("/Views/Shared/Partials/_BannerPartial.cshtml", new BannerViewModel
+    {
+        ImagePath = "/img/home-bg.jpg",
+        Heading = Model.Title,
+        SubHeading = Model.Title,
+    })
+
+<div class="container">
+    @Html.Raw(Model.Content)
+
+    <div class="row mt-4">
+        <button type="button" class="btn btn-outline-info mr-2">Tag</button>
+        <button type="button" class="btn btn-outline-info mr-2">Tag 2</button>
+        <button type="button" class="btn btn-outline-info mr-2">Tag 3</button>
+    </div>
+</div>

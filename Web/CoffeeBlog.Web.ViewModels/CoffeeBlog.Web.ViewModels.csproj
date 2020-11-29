@@ -23,4 +23,8 @@
     <ProjectReference Include="..\..\Services\CoffeeBlog.Services.Mapping\CoffeeBlog.Services.Mapping.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Post\" />
+  </ItemGroup>
+
 </Project>

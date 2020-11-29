@@ -1,16 +1,27 @@
 ﻿namespace CoffeeBlog.Web.Controllers
 {
     using System.Diagnostics;
-
+    using System.Linq;
+    using CoffeeBlog.Data.Common.Repositories;
+    using CoffeeBlog.Data.Models;
     using CoffeeBlog.Web.ViewModels;
 
     using Microsoft.AspNetCore.Mvc;
 
     public class HomeController : BaseController
     {
+        private readonly IDeletableEntityRepository<Post> postsRepository;
+
+        public HomeController(IDeletableEntityRepository<Post> postsRepository)
+        {
+            this.postsRepository = postsRepository;
+        }
+
         public IActionResult Index()
         {
-            return this.View();
+            var latestPosts = this.postsRepository.All().OrderByDescending(x => x.CreatedOn).Take(4);
+
+            return this.View(latestPosts);
         }
 
         public IActionResult Privacy()
