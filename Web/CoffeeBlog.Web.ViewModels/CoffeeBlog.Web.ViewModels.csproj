@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Post\" />
+    <Folder Include="Administration\Posts\" />
   </ItemGroup>
 
 </Project>

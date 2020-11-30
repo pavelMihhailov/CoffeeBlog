@@ -1,21 +1,22 @@
-﻿@model Post
+﻿@model PostDetailsViewModel
 @{
-    this.ViewData["Title"] = Model.Title;
+    this.ViewData["Title"] = Model.Post.Title;
 }
 
 @await Html.PartialAsync("/Views/Shared/Partials/_BannerPartial.cshtml", new BannerViewModel
     {
         ImagePath = "/img/home-bg.jpg",
-        Heading = Model.Title,
-        SubHeading = Model.Title,
+        Heading = Model.Post.Title,
+        SubHeading = Model.Post.Title,
     })
 
 <div class="container">
-    @Html.Raw(Model.Content)
+    @Html.Raw(Model.Post.Content)
 
     <div class="row mt-4">
-        <button type="button" class="btn btn-outline-info mr-2">Tag</button>
-        <button type="button" class="btn btn-outline-info mr-2">Tag 2</button>
-        <button type="button" class="btn btn-outline-info mr-2">Tag 3</button>
+        @foreach (var tag in Model.RelatedTags)
+        {
+            <a href="/Tags/@tag.Id" class="btn btn-outline-info mr-2">@tag.Title</a>
+        }
     </div>
 </div>

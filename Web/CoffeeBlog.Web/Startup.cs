@@ -9,6 +9,7 @@
     using CoffeeBlog.Data.Repositories;
     using CoffeeBlog.Data.Seeding;
     using CoffeeBlog.Services.Data;
+    using CoffeeBlog.Services.Data.Interfaces;
     using CoffeeBlog.Services.Mapping;
     using CoffeeBlog.Services.Messaging;
     using CoffeeBlog.Web.ViewModels;
@@ -64,6 +65,8 @@
             // Application services
             services.AddTransient<IEmailSender, NullMessageSender>();
             services.AddTransient<ISettingsService, SettingsService>();
+            services.AddTransient<IPostsService, PostsService>();
+            services.AddTransient<ITagsService, TagsService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

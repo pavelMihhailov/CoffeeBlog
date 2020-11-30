@@ -5,6 +5,9 @@
 
     using CoffeeBlog.Data;
     using CoffeeBlog.Data.Models;
+    using CoffeeBlog.Services.Data.Interfaces;
+    using CoffeeBlog.Web.ViewModels.Administration.Tags;
+    using CoffeeBlog.Web.ViewModels.Posts;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
 
@@ -12,10 +15,17 @@
     public class PostsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IPostsService productsService;
+        private readonly ITagsService tagsService;
 
-        public PostsController(ApplicationDbContext context)
+        public PostsController(
+            ApplicationDbContext context,
+            IPostsService productsService,
+            ITagsService tagsService)
         {
             _context = context;
+            this.productsService = productsService;
+            this.tagsService = tagsService;
         }
 
         public async Task<IActionResult> Index()
@@ -41,24 +51,34 @@
             return this.View(post);
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            return this.View();
+            var tags = await this.tagsService.GetAllAsync<TagViewModel>();
+
+            var viewModel = new CreatePostViewModel
+            {
+                Tags = tags,
+            };
+
+            return this.View(viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Title,PreviewImagePath,Content")] Post post)
+        public async Task<IActionResult> Create(CreatePostInputModel inputModel)
         {
             if (this.ModelState.IsValid)
             {
-                this._context.Add(post);
-                await this._context.SaveChangesAsync();
+                await this.productsService.AddProduct(
+                    inputModel.Title,
+                    inputModel.Content,
+                    inputModel.PreviewImagePath,
+                    inputModel.Tags);
 
                 return this.RedirectToAction(nameof(this.Index));
             }
 
-            return this.View(post);
+            return this.View();
         }
 
         public async Task<IActionResult> Edit(int? id)
