@@ -11,8 +11,7 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
 
-    [Area("Administration")]
-    public class PostsController : Controller
+    public class PostsController : AdministrationController
     {
         private readonly ApplicationDbContext _context;
         private readonly IPostsService productsService;

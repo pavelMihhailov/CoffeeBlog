@@ -8,8 +8,7 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
 
-    [Area("Administration")]
-    public class TagsController : Controller
+    public class TagsController : AdministrationController
     {
         private readonly ApplicationDbContext _context;
 

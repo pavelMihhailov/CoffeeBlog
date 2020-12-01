@@ -27,7 +27,7 @@
 
         private async Task SeedUsersAsync(UserManager<ApplicationUser> userManager)
         {
-            var user = await userManager.FindByEmailAsync(this.configuration["Administrator:Email"]);
+            var user = await userManager.FindByNameAsync(this.configuration["Administrator:Username"]);
             if (user == null)
             {
                 var result = await userManager.CreateAsync(
