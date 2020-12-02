@@ -20,5 +20,7 @@
             IEnumerable<int> tagIds);
 
         Task<IEnumerable<int>> GetPostRelatedTagIds(int postId);
+
+        Task<IEnumerable<Post>> GetAllPostsWithTag(int tagId);
     }
 }

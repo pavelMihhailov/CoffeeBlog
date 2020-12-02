@@ -7,6 +7,8 @@
 
     public interface ITagsService
     {
+        Tag GetById(int id);
+
         T GetById<T>(int id);
 
         Task<IEnumerable<Tag>> GetAllAsync();

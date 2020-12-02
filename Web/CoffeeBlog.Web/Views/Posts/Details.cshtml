@@ -16,7 +16,8 @@
     <div class="row mt-4">
         @foreach (var tag in Model.RelatedTags)
         {
-            <a href="/Tags/@tag.Id" class="btn btn-outline-info mr-2">@tag.Title</a>
+            <a asp-area="" asp-controller="Tags" asp-action="Index" asp-route-id="@tag.Id"
+               class="btn btn-outline-info mr-2">@tag.Title</a>
         }
     </div>
 </div>

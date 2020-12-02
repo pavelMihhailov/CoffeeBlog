@@ -19,13 +19,20 @@
             this.tagRepo = tagRepo;
         }
 
+        public Tag GetById(int id)
+        {
+            return this.tagRepo.All()
+                .Where(x => x.Id == id)
+                .FirstOrDefault();
+        }
+
         public T GetById<T>(int id)
         {
-            var product = this.tagRepo.All()
+            var tag = this.tagRepo.All()
                 .Where(x => x.Id == id)
                 .To<T>().FirstOrDefault();
 
-            return product;
+            return tag;
         }
 
         public async Task<IEnumerable<Tag>> GetAllAsync()

@@ -14,16 +14,16 @@
     public class PostsService : IPostsService
     {
         private readonly IDeletableEntityRepository<Post> postRepo;
-        private readonly IDeletableEntityRepository<Tag> tagRepo;
+        private readonly ITagsService tagsService;
         private readonly IRepository<PostTag> postWithTagsRepo;
 
         public PostsService(
             IDeletableEntityRepository<Post> postRepo,
-            IDeletableEntityRepository<Tag> tagRepo,
+            ITagsService tagsService,
             IRepository<PostTag> postWithTagsRepo)
         {
             this.postRepo = postRepo;
-            this.tagRepo = tagRepo;
+            this.tagsService = tagsService;
             this.postWithTagsRepo = postWithTagsRepo;
         }
 
@@ -83,11 +83,22 @@
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<Post>> GetAllPostsWithTag(int tagId)
+        {
+            var postsIds = this.postWithTagsRepo.All()
+                .Where(x => x.TagId == tagId)
+                .Select(x => x.PostId);
+
+            var allPosts = await this.GetAllAsync();
+
+            return allPosts.Where(x => postsIds.Contains(x.Id));
+        }
+
         private void AddTagsToPost(IEnumerable<int> tagIds, Post post)
         {
             foreach (int tagId in tagIds)
             {
-                Tag tag = this.tagRepo.All().FirstOrDefault(x => x.Id == tagId);
+                Tag tag = this.tagsService.GetById(tagId);
 
                 bool isTagAlreadyAdded = this.postWithTagsRepo.All()
                     .Any(x => x.TagId == tagId && x.PostId == post.Id);

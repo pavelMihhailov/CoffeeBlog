@@ -1,0 +1,16 @@
+﻿@model PostsWithTagViewModel
+
+<div class="container">
+    <h2>Постове свързани с <b>@Model.TagTitle</b></h2>
+    @foreach (var post in Model.Posts)
+    {
+        @await Html.PartialAsync("/Views/Shared/Partials/_PostCardPartial.cshtml", new PostCardViewModel
+            {
+                ImagePath = post.PreviewImagePath,
+                Title = post.Title,
+                SubTitle = post.Title,
+                PostLink = $"/Posts/Details/{post.Id}",
+                ButtonText = "Прочети",
+            })
+    }
+</div>
