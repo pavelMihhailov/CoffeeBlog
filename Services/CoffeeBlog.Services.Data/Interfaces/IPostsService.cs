@@ -19,6 +19,8 @@
             string previewImagePath,
             IEnumerable<int> tagIds);
 
+        Task Edit(Post post, IEnumerable<int> selectedTags);
+
         Task<IEnumerable<int>> GetPostRelatedTagIds(int postId);
 
         Task<IEnumerable<Post>> GetAllPostsWithTag(int tagId);

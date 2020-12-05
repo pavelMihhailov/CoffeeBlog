@@ -46,16 +46,6 @@
             return await this.postRepo.All().To<T>().ToListAsync();
         }
 
-        public async Task<Task> AddPostAsync(Post post)
-        {
-            post.CreatedOn = DateTime.UtcNow;
-
-            await this.postRepo.AddAsync(post);
-            await this.postRepo.SaveChangesAsync();
-
-            return Task.CompletedTask;
-        }
-
         public async Task AddProduct(
             string title,
             string content,
@@ -72,6 +62,18 @@
             this.AddTagsToPost(tagIds, post);
 
             await this.AddPostAsync(post);
+        }
+
+        public async Task Edit(Post post, IEnumerable<int> selectedTags)
+        {
+            if (selectedTags == null)
+            {
+                selectedTags = new List<int>();
+            }
+
+            await this.RemoveUnselectedTags(post.Id, selectedTags);
+            this.AddTagsToPost(selectedTags, post);
+            await this.UpdatePostAsync(post);
         }
 
         public async Task<IEnumerable<int>> GetPostRelatedTagIds(int postId)
@@ -94,6 +96,24 @@
             return allPosts.Where(x => postsIds.Contains(x.Id));
         }
 
+        private async Task<Task> AddPostAsync(Post post)
+        {
+            post.CreatedOn = DateTime.UtcNow;
+
+            await this.postRepo.AddAsync(post);
+            await this.postRepo.SaveChangesAsync();
+
+            return Task.CompletedTask;
+        }
+
+        private async Task UpdatePostAsync(Post post)
+        {
+            post.ModifiedOn = DateTime.UtcNow;
+
+            this.postRepo.Update(post);
+            await this.postRepo.SaveChangesAsync();
+        }
+
         private void AddTagsToPost(IEnumerable<int> tagIds, Post post)
         {
             foreach (int tagId in tagIds)
@@ -109,6 +129,23 @@
                         new PostTag { Tag = tag, Post = post });
                 }
             }
+        }
+
+        private async Task RemoveUnselectedTags(int postId, IEnumerable<int> selectedTags)
+        {
+            List<PostTag> postWithTags = await this.postWithTagsRepo.All()
+                .Where(x => x.PostId == postId)
+                .ToListAsync();
+
+            foreach (var postWithTag in postWithTags)
+            {
+                if (!selectedTags.Contains(postWithTag.TagId))
+                {
+                    this.postWithTagsRepo.Delete(postWithTag);
+                }
+            }
+
+            await this.postWithTagsRepo.SaveChangesAsync();
         }
     }
 }

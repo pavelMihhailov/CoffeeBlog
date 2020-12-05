@@ -1,5 +1,6 @@
 ﻿namespace CoffeeBlog.Web.Areas.Administration.Controllers
 {
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -9,21 +10,22 @@
     using CoffeeBlog.Web.ViewModels.Administration.Tags;
     using CoffeeBlog.Web.ViewModels.Posts;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.Rendering;
     using Microsoft.EntityFrameworkCore;
 
     public class PostsController : AdministrationController
     {
         private readonly ApplicationDbContext _context;
-        private readonly IPostsService productsService;
+        private readonly IPostsService postsService;
         private readonly ITagsService tagsService;
 
         public PostsController(
             ApplicationDbContext context,
-            IPostsService productsService,
+            IPostsService postsService,
             ITagsService tagsService)
         {
             _context = context;
-            this.productsService = productsService;
+            this.postsService = postsService;
             this.tagsService = tagsService;
         }
 
@@ -68,7 +70,7 @@
         {
             if (this.ModelState.IsValid)
             {
-                await this.productsService.AddProduct(
+                await this.postsService.AddProduct(
                     inputModel.Title,
                     inputModel.Content,
                     inputModel.PreviewImagePath,
@@ -80,25 +82,36 @@
             return this.View();
         }
 
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int id)
         {
-            if (id == null)
+            var viewModel = this.postsService.GetById<EditPostViewModel>(id);
+
+            if (string.IsNullOrWhiteSpace(viewModel.Title))
             {
                 return this.NotFound();
             }
 
-            var post = await this._context.Posts.FindAsync(id);
-            if (post == null)
-            {
-                return this.NotFound();
-            }
+            var allTags = await this.tagsService.GetAllAsync<TagViewModel>();
+            var selectedTags = await this.postsService.GetPostRelatedTagIds(id);
 
-            return this.View(post);
+            viewModel.Tags = allTags.Select(x =>
+                                        new SelectListItem
+                                        {
+                                            Text = x.Title,
+                                            Value = x.Id.ToString(),
+                                        });
+
+            viewModel.SelectedTags = selectedTags;
+
+            return this.View(viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Title,PreviewImagePath,Content,Id")] Post post)
+        public async Task<IActionResult> Edit(
+            int id,
+            [Bind("Title,CreatedOn,PreviewImagePath,Content,Id")] Post post,
+            IEnumerable<int> selectedTags)
         {
             if (id != post.Id)
             {
@@ -107,22 +120,7 @@
 
             if (this.ModelState.IsValid)
             {
-                try
-                {
-                    this._context.Update(post);
-                    await this._context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!this.PostExists(post.Id))
-                    {
-                        return this.NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                await this.postsService.Edit(post, selectedTags);
 
                 return this.RedirectToAction(nameof(this.Index));
             }

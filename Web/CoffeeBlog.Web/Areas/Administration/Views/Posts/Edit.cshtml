@@ -1,5 +1,4 @@
-﻿@model Post
-
+﻿@model EditPostViewModel
 @{
     ViewData["Title"] = "Edit";
 }
@@ -42,6 +41,10 @@
                     <span asp-validation-for="Title" class="text-danger"></span>
                 </div>
                 <div class="form-group">
+                    <label asp-for="CreatedOn" class="control-label"></label>
+                    <input asp-for="CreatedOn" readonly class="form-control" />
+                </div>
+                <div class="form-group">
                     <label asp-for="PreviewImagePath" class="control-label"></label>
                     <input asp-for="PreviewImagePath" class="form-control" />
                     <span asp-validation-for="PreviewImagePath" class="text-danger"></span>
@@ -52,6 +55,11 @@
                         @Model.Content
                     </textarea>
                     <span asp-validation-for="Content" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Tags">Tags</label>
+                    <select name="selectedTags" asp-for="SelectedTags" class="form-control"
+                            asp-items="Model.Tags" multiple=""></select>
                 </div>
                 <div class="form-group">
                     <input type="submit" value="Save" class="btn btn-primary" />
