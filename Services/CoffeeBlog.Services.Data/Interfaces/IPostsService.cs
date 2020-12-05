@@ -7,6 +7,8 @@
 
     public interface IPostsService
     {
+        Post GetById(int id);
+
         T GetById<T>(int id);
 
         Task<IEnumerable<Post>> GetAllAsync();
@@ -20,6 +22,8 @@
             IEnumerable<int> tagIds);
 
         Task Edit(Post post, IEnumerable<int> selectedTags);
+
+        Task Delete(Post post);
 
         Task<IEnumerable<int>> GetPostRelatedTagIds(int postId);
 

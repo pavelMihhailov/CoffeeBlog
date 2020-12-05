@@ -27,6 +27,15 @@
             this.postWithTagsRepo = postWithTagsRepo;
         }
 
+        public Post GetById(int id)
+        {
+            var product = this.postRepo.All()
+                .Where(x => x.Id == id)
+                .FirstOrDefault();
+
+            return product;
+        }
+
         public T GetById<T>(int id)
         {
             var product = this.postRepo.All()
@@ -94,6 +103,12 @@
             var allPosts = await this.GetAllAsync();
 
             return allPosts.Where(x => postsIds.Contains(x.Id));
+        }
+
+        public async Task Delete(Post post)
+        {
+            this.postRepo.Delete(post);
+            await this.postRepo.SaveChangesAsync();
         }
 
         private async Task<Task> AddPostAsync(Post post)

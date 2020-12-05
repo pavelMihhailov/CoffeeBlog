@@ -4,45 +4,37 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    using CoffeeBlog.Data;
     using CoffeeBlog.Data.Models;
     using CoffeeBlog.Services.Data.Interfaces;
     using CoffeeBlog.Web.ViewModels.Administration.Tags;
     using CoffeeBlog.Web.ViewModels.Posts;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
-    using Microsoft.EntityFrameworkCore;
 
     public class PostsController : AdministrationController
     {
-        private readonly ApplicationDbContext _context;
         private readonly IPostsService postsService;
         private readonly ITagsService tagsService;
 
-        public PostsController(
-            ApplicationDbContext context,
-            IPostsService postsService,
-            ITagsService tagsService)
+        public PostsController(IPostsService postsService, ITagsService tagsService)
         {
-            _context = context;
             this.postsService = postsService;
             this.tagsService = tagsService;
         }
 
         public async Task<IActionResult> Index()
         {
-            return this.View(await this._context.Posts.ToListAsync());
+            return this.View(await this.postsService.GetAllAsync<PostViewModel>());
         }
 
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int? id)
         {
             if (id == null)
             {
                 return this.NotFound();
             }
 
-            var post = await this._context.Posts
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var post = this.postsService.GetById(id.Value);
 
             if (post == null)
             {
@@ -128,15 +120,15 @@
             return this.View(post);
         }
 
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return this.NotFound();
             }
 
-            var post = await this._context.Posts
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var post = this.postsService.GetById(id.Value);
+
             if (post == null)
             {
                 return this.NotFound();
@@ -150,17 +142,11 @@
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var post = await this._context.Posts.FindAsync(id);
+            var post = this.postsService.GetById(id);
 
-            this._context.Posts.Remove(post);
-            await this._context.SaveChangesAsync();
+            await this.postsService.Delete(post);
 
             return this.RedirectToAction(nameof(this.Index));
-        }
-
-        private bool PostExists(int id)
-        {
-            return this._context.Posts.Any(e => e.Id == id);
         }
     }
 }

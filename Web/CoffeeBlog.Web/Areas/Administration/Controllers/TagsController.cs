@@ -1,36 +1,34 @@
 ﻿namespace CoffeeBlog.Web.Areas.Administration.Controllers
 {
-    using System.Linq;
     using System.Threading.Tasks;
 
-    using CoffeeBlog.Data;
     using CoffeeBlog.Data.Models;
+    using CoffeeBlog.Services.Data.Interfaces;
+    using CoffeeBlog.Web.ViewModels.Tags;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.EntityFrameworkCore;
 
     public class TagsController : AdministrationController
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ITagsService tagsService;
 
-        public TagsController(ApplicationDbContext context)
+        public TagsController(ITagsService tagsService)
         {
-            this._context = context;
+            this.tagsService = tagsService;
         }
 
         public async Task<IActionResult> Index()
         {
-            return this.View(await this._context.Tags.ToListAsync());
+            return this.View(await this.tagsService.GetAllAsync());
         }
 
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int? id)
         {
             if (id == null)
             {
                 return this.NotFound();
             }
 
-            var tag = await this._context.Tags
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var tag = this.tagsService.GetById(id.Value);
 
             if (tag == null)
             {
@@ -47,27 +45,26 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Title")] Tag tag)
+        public async Task<IActionResult> Create(CreateTagInputModel inputModel)
         {
             if (this.ModelState.IsValid)
             {
-                this._context.Add(tag);
-                await this._context.SaveChangesAsync();
+                await this.tagsService.AddTag(inputModel.Title);
 
                 return this.RedirectToAction(nameof(this.Index));
             }
 
-            return this.View(tag);
+            return this.RedirectToAction(nameof(this.Create));
         }
 
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return this.NotFound();
             }
 
-            var tag = await this._context.Tags.FindAsync(id);
+            var tag = this.tagsService.GetById(id.Value);
 
             if (tag == null)
             {
@@ -79,7 +76,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Title,Id")] Tag tag)
+        public async Task<IActionResult> Edit(int id, [Bind("Title,CreatedOn,Id")] Tag tag)
         {
             if (id != tag.Id)
             {
@@ -88,22 +85,7 @@
 
             if (this.ModelState.IsValid)
             {
-                try
-                {
-                    this._context.Update(tag);
-                    await this._context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!this.TagExists(tag.Id))
-                    {
-                        return this.NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                await this.tagsService.Edit(tag);
 
                 return this.RedirectToAction(nameof(this.Index));
             }
@@ -111,15 +93,14 @@
             return this.View(tag);
         }
 
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return this.NotFound();
             }
 
-            var tag = await this._context.Tags
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var tag = this.tagsService.GetById(id.Value);
 
             if (tag == null)
             {
@@ -134,17 +115,11 @@
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var tag = await this._context.Tags.FindAsync(id);
+            var tag = this.tagsService.GetById(id);
 
-            this._context.Tags.Remove(tag);
-            await this._context.SaveChangesAsync();
+            await this.tagsService.Delete(tag);
 
             return this.RedirectToAction(nameof(this.Index));
-        }
-
-        private bool TagExists(int id)
-        {
-            return this._context.Tags.Any(e => e.Id == id);
         }
     }
 }

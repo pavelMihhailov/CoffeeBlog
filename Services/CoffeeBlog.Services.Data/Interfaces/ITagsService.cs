@@ -14,5 +14,11 @@
         Task<IEnumerable<Tag>> GetAllAsync();
 
         Task<IEnumerable<T>> GetAllAsync<T>();
+
+        Task AddTag(string title);
+
+        Task Edit(Tag tag);
+
+        Task Delete(Tag tag);
     }
 }
