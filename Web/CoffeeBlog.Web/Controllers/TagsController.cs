@@ -1,7 +1,10 @@
 ﻿namespace CoffeeBlog.Web.Controllers
 {
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
 
+    using CoffeeBlog.Data.Models;
     using CoffeeBlog.Services.Data.Interfaces;
     using CoffeeBlog.Web.ViewModels.Administration.Tags;
     using CoffeeBlog.Web.ViewModels.Tags;
@@ -18,20 +21,31 @@
             this.tagsService = tagsService;
         }
 
-        public async Task<IActionResult> Index(int id)
+        public async Task<IActionResult> Index(int id = 0)
         {
-            if (id <= 0)
+            if (id < 0)
             {
                 return this.NotFound();
             }
 
-            var postsRelated = await this.postsService.GetAllPostsWithTag(id);
-            var tag = this.tagsService.GetById<TagViewModel>(id);
+            IEnumerable<Post> postsRelated;
+
+            if (id == 0)
+            {
+                postsRelated = await this.postsService.GetAllAsync();
+            }
+            else
+            {
+                postsRelated = await this.postsService.GetAllPostsWithTag(id);
+            }
+
+            var allTags = await this.tagsService.GetAllAsync<TagViewModel>();
 
             var viewModel = new PostsWithTagViewModel
             {
                 Posts = postsRelated,
-                TagTitle = tag.Title,
+                SelectedTagId = id,
+                AllTags = allTags,
             };
 
             return this.View(viewModel);
