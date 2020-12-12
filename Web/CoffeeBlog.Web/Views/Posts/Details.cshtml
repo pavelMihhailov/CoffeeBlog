@@ -5,19 +5,23 @@
 
 @await Html.PartialAsync("/Views/Shared/Partials/_BannerPartial.cshtml", new BannerViewModel
     {
-        ImagePath = "/img/home-bg.jpg",
         Heading = Model.Post.Title,
         SubHeading = Model.Post.Title,
+        ButtonText = "Прочети",
     })
 
-<div class="container">
-    @Html.Raw(Model.Post.Content)
+<div class="tm-main-section light-gray-bg">
+    <div class="container" id="main">
+        <div class="margin-top-30">
+            @Html.Raw(Model.Post.Content)
 
-    <div class="row mt-4">
-        @foreach (var tag in Model.RelatedTags)
-        {
-            <a asp-area="" asp-controller="Tags" asp-action="Index" asp-route-id="@tag.Id"
-               class="btn btn-outline-info mr-2">@tag.Title</a>
-        }
+            <div class="row mt-4">
+                @foreach (var tag in Model.RelatedTags)
+                {
+                    <a asp-area="" asp-controller="Tags" asp-action="Index" asp-route-id="@tag.Id"
+                       class="btn btn-outline-info mr-2">@tag.Title</a>
+                }
+            </div>
+        </div>
     </div>
 </div>

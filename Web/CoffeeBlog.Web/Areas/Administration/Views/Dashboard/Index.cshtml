@@ -3,13 +3,6 @@
     this.ViewData["Title"] = "Admin dashboard";
 }
 
-@await Html.PartialAsync("/Views/Shared/Partials/_BannerPartial.cshtml", new BannerViewModel
-    {
-        ImagePath = "/img/home-bg.jpg",
-        Heading = "Добре дошъл в админ панела!",
-        SubHeading = "Създай, промени или изтрий постове/тагове",
-    })
-
 <div class="container">
     <a class="page-link" asp-area="Administration" asp-controller="Posts" asp-action="Index">Posts Panel</a>
 

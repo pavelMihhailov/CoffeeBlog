@@ -1,28 +1,108 @@
 ﻿@using CoffeeBlog.Common
-@model IQueryable<Post>
+@using CoffeeBlog.Web.ViewModels.Home
+
+@model HomeViewModel
 @{
     this.ViewData["Title"] = "Начало";
 }
 
 @await Html.PartialAsync("/Views/Shared/Partials/_BannerPartial.cshtml", new BannerViewModel
     {
-        ImagePath = "/img/home-bg.jpg",
-        Heading = "Добре дошли!",
+        Heading = "Добре дошли в",
         SubHeading = "Вижте едни от последните ни постове",
+        ButtonText = "Разгледай",
     })
 
-<div class="container">
-    <div class="row">
-        @foreach (var post in Model)
-        {
-            @await Html.PartialAsync("/Views/Shared/Partials/_PostCardPartial.cshtml", new PostCardViewModel
-                {
-                    ImagePath = post.PreviewImagePath,
-                    Title = post.Title,
-                    SubTitle = post.Title,
-                    PostLink = $"/Posts/Details/{post.Id}",
-                    ButtonText = "Прочети",
-                })
-        }
+<div class="tm-main-section light-gray-bg">
+    <div class="container" id="main">
+        <section class="tm-section row">
+            <div class="col-lg-9 col-md-9 col-sm-8">
+                <h2 class="tm-section-header gold-text tm-handwriting-font">The Best Coffee for you</h2>
+                <h2>Cafe House</h2>
+                <p class="tm-welcome-description">This is free HTML5 website template from <span class="blue-text">template</span><span class="green-text">mo</span>. Fndimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Ettiam sit amet orci eget eros faucibus tincidunt.</p>
+                <a href="#" class="tm-more-button margin-top-30">Read More</a>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-4 tm-welcome-img-container">
+                <div class="inline-block shadow-img">
+                    <img src="~/img/1.jpg" alt="Image" class="img-circle img-thumbnail">
+                </div>
+            </div>
+        </section>
+        <section class="tm-section row">
+            <div class="col-lg-12 tm-section-header-container">
+                <h2 class="tm-section-header gold-text tm-handwriting-font">
+                    <img src="~/img/logo.png" alt="Logo" class="tm-site-logo"> Today's Special
+                </h2>
+                <div class="tm-hr-container"><hr class="tm-hr"></div>
+            </div>
+            <div class="col-lg-12 tm-special-container margin-top-60">
+                <div class="tm-special-container-left">
+                    <!-- left -->
+                    @await Html.PartialAsync("/Views/Shared/Partials/_PostCardPartial.cshtml", new PostCardViewModel
+                        {
+                            ImagePath = "/img/special-1.jpg",
+                            Title = Model.BigPost.Title,
+                            SubTitle = Model.BigPost.Title,
+                            PostLink = $"/Posts/Details/{Model.BigPost.Id}",
+                            ButtonText = "Прочети",
+                        })
+                </div>
+                <div class="tm-special-container-right">
+                    <!-- right -->
+                    <div>
+                        @await Html.PartialAsync("/Views/Shared/Partials/_PostCardPartial.cshtml", new PostCardViewModel
+                            {
+                                ImagePath = "/img/special-2.jpg",
+                                Title = Model.MediumPost.Title,
+                                SubTitle = Model.MediumPost.Title,
+                                PostLink = $"/Posts/Details/{Model.MediumPost.Id}",
+                                ButtonText = "Прочети",
+                            })
+                    </div>
+                    <div class="tm-special-container-lower">
+                        @foreach (var smallPost in Model.SmallPosts)
+                        {
+                            @await Html.PartialAsync("/Views/Shared/Partials/_PostCardPartial.cshtml", new PostCardViewModel
+                                {
+                                    ImagePath = "/img/special-3.jpg",
+                                    Title = smallPost.Title,
+                                    SubTitle = smallPost.Title,
+                                    PostLink = $"/Posts/Details/{smallPost.Id}",
+                                    ButtonText = "Прочети",
+                                })
+                        }
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="tm-section">
+            <div class="row">
+                <div class="col-lg-12 tm-section-header-container">
+                    <h2 class="tm-section-header gold-text tm-handwriting-font">
+                        <img src="~/img/logo.png" alt="Logo" class="tm-site-logo"> Късметче за деня
+                    </h2>
+                    <div class="tm-hr-container"><hr class="tm-hr"></div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="tm-daily-menu-container margin-top-60">
+                    <div class="col-lg-4 col-md-4">
+                        <img src="~/img/menu-board.png" alt="Menu board" class="tm-daily-menu-img">
+                    </div>
+                    <div class="col-lg-8 col-md-8">
+                        <p>Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus.</p>
+                        <ol class="margin-top-30">
+                            <li>Tellus eget condimentum rhoncus.</li>
+                            <li>Sem quam semper libero.</li>
+                            <li>Sit amet adipiscing sem neque sed ipsum.</li>
+                            <li>Nam quam nunc, blandit vel, luctus pulvinar.</li>
+                            <li>Maecenas nec odio et ante tincidunt tempus.</li>
+                            <li>Donec vitae sapien ut libero ventenatis faucibus.</li>
+                        </ol>
+                        <a href="#" class="tm-more-button margin-top-30">Изтегли късметче</a>
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
-</div>
+</div> 

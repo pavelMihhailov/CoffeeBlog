@@ -1,20 +1,13 @@
 ﻿@model PostCardViewModel
 
-<div class="col-sm-3">
-    <div class="card">
-        <div class="bg-image hover-overlay ripple" data-ripple-color="light">
-            <img src="@Model.ImagePath"
-                 class="img-fluid" />
-            <a href="@Model.PostLink">
-                <div class="mask" style="background-color: rgba(251, 251, 251, 0.15)"></div>
-            </a>
-        </div>
-        <div class="card-body">
-            <h5 class="card-title">@Model.Title</h5>
-            <p class="card-text">
-                @Model.SubTitle
-            </p>
-            <a href="@Model.PostLink" class="btn btn-primary">@Model.ButtonText</a>
-        </div>
+<div class="tm-special-item">
+    <div class="tm-special-img-container">
+        <img src="@Model.ImagePath" alt="Special" class="tm-special-img img-responsive">
+        <a href="@Model.PostLink">
+            <div class="tm-special-description">
+                <h3 class="tm-special-title">@Model.Title</h3>
+                <p>@Model.SubTitle</p>
+            </div>
+        </a>
     </div>
 </div>

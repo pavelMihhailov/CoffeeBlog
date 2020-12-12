@@ -2,10 +2,12 @@
 {
     using System.Diagnostics;
     using System.Linq;
+
     using CoffeeBlog.Data.Common.Repositories;
     using CoffeeBlog.Data.Models;
     using CoffeeBlog.Web.ViewModels;
-
+    using CoffeeBlog.Web.ViewModels.Home;
+    using CoffeeBlog.Web.ViewModels.Posts;
     using Microsoft.AspNetCore.Mvc;
 
     public class HomeController : BaseController
@@ -19,9 +21,16 @@
 
         public IActionResult Index()
         {
-            var latestPosts = this.postsRepository.All().OrderByDescending(x => x.CreatedOn).Take(4);
+            var latestPosts = this.postsRepository.All().OrderByDescending(x => x.CreatedOn).ToList();
 
-            return this.View(latestPosts);
+            var viewModel = new HomeViewModel
+            {
+                BigPost = latestPosts.Take(1).FirstOrDefault(),
+                MediumPost = latestPosts.Skip(1).Take(1).FirstOrDefault(),
+                SmallPosts = latestPosts.Skip(2).ToList(),
+            };
+
+            return this.View(viewModel);
         }
 
         public IActionResult Privacy()

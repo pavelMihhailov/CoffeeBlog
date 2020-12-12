@@ -5,23 +5,35 @@
 
 @await Html.PartialAsync("/Views/Shared/Partials/_BannerPartial.cshtml", new BannerViewModel
     {
-        ImagePath = "/img/home-bg.jpg",
         Heading = "Всички постове",
         SubHeading = "Вижте всички постове",
+        ButtonText = "Разгледай",
     })
 
-<div class="container">
-    <div class="row">
-        @foreach (var post in Model)
-        {
-            @await Html.PartialAsync("/Views/Shared/Partials/_PostCardPartial.cshtml", new PostCardViewModel
-                {
-                    ImagePath = post.PreviewImagePath,
-                    Title = post.Title,
-                    SubTitle = post.Title,
-                    PostLink = $"/Posts/Details/{post.Id}",
-                    ButtonText = "Прочети",
-                })
-        }
+<div class="tm-main-section light-gray-bg">
+    <div class="container" id="main">
+        <section class="tm-section row">
+            <div class="col-lg-12 tm-section-header-container">
+                <h2 class="tm-section-header gold-text tm-handwriting-font">
+                    <img src="~/img/logo.png" alt="Logo" class="tm-site-logo"> Всички Статии
+                </h2>
+                <div class="tm-hr-container"><hr class="tm-hr"></div>
+            </div>
+            <div class="col-lg-12 tm-special-container margin-top-60">
+                <div class="tm-special-container-left">
+                    @foreach (var post in Model)
+                    {
+                        @await Html.PartialAsync("/Views/Shared/Partials/_PostCardPartial.cshtml", new PostCardViewModel
+                            {
+                                ImagePath = post.PreviewImagePath,
+                                Title = post.Title,
+                                SubTitle = post.Title,
+                                PostLink = $"/Posts/Details/{post.Id}",
+                                ButtonText = "Прочети",
+                            })
+                    }
+                </div>
+            </div>
+        </section>
     </div>
 </div>

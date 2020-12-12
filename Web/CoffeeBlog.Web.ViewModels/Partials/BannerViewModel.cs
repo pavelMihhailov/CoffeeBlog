@@ -7,5 +7,7 @@
         public string Heading { get; set; }
 
         public string SubHeading { get; set; }
+
+        public string ButtonText { get; set; }
     }
 }
